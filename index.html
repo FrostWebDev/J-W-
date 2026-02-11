@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Czy zostaniesz moją Walentynką? ❤️🐱</title>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Quicksand:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-pink: #ff85a2;
+            --soft-pink: #ffe3e9;
+            --heart-red: #ff4d6d;
+            --cat-gray: #d3d3d3;
+            --cat-dark: #4a4a4a;
+            --cat-accent: #333;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: var(--soft-pink);
+            font-family: 'Quicksand', sans-serif;
+            overflow-x: hidden;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+
+        /* Tło z serduszkami */
+        .background-elements {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .floating-item {
+            position: absolute;
+            color: var(--heart-red);
+            opacity: 0.5;
+            animation: float 6s infinite ease-in-out;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(100vh) rotate(0deg); opacity: 0; }
+            20% { opacity: 0.6; }
+            80% { opacity: 0.6; }
+            100% { transform: translateY(-10vh) rotate(360deg); opacity: 0; }
+        }
+
+        /* Kontener główny */
+        .container {
+            max-width: 600px;
+            padding: 2.5rem;
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+            border-radius: 40px;
+            box-shadow: 0 15px 45px rgba(255, 133, 162, 0.4);
+            margin: 20px;
+            animation: fadeIn 1.5s ease-out;
+            position: relative;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        h1 {
+            font-family: 'Dancing Script', cursive;
+            color: var(--heart-red);
+            font-size: 2.8rem;
+            margin-bottom: 1.5rem;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.05);
+        }
+
+        /* Ilustracja Kotka */
+        .cat-container {
+            position: relative;
+            width: 240px;
+            height: 240px;
+            margin: 0 auto 1.5rem;
+        }
+
+        .cat-svg {
+            width: 100%;
+            height: 100%;
+        }
+
+        .eye {
+            animation: blink 4s infinite;
+            transform-origin: center;
+        }
+
+        @keyframes blink {
+            0%, 90%, 100% { transform: scaleY(1); }
+            95% { transform: scaleY(0.1); }
+        }
+
+        .tail {
+            animation: wag 2.5s infinite ease-in-out;
+            transform-origin: 155px 170px;
+        }
+
+        @keyframes wag {
+            0%, 100% { transform: rotate(0deg); }
+            50% { transform: rotate(20deg); }
+        }
+
+        .heart-pulse {
+            fill: var(--heart-red);
+            animation: pulse 1.2s infinite;
+            transform-origin: center;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.15); }
+            100% { transform: scale(1); }
+        }
+
+        /* Przyciski */
+        .buttons-container {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            height: 70px;
+            align-items: center;
+            position: relative;
+            margin-top: 1rem;
+        }
+
+        .btn {
+            padding: 14px 40px;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.3rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, background-color 0.3s, box-shadow 0.3s;
+            font-family: 'Quicksand', sans-serif;
+        }
+
+        #yes-btn {
+            background-color: var(--heart-red);
+            color: white;
+            box-shadow: 0 5px 15px rgba(255, 77, 109, 0.4);
+        }
+
+        #yes-btn:hover {
+            transform: scale(1.1);
+            background-color: #ff1a4a;
+            box-shadow: 0 8px 20px rgba(255, 77, 109, 0.6);
+        }
+
+        #no-btn {
+            background-color: #f0f0f0;
+            color: #888;
+            position: absolute;
+            z-index: 10;
+        }
+
+        /* Panel Sukcesu */
+        #success-panel {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--soft-pink);
+            z-index: 100;
+            padding: 2rem;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            animation: slideUp 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.1);
+        }
+
+        @keyframes slideUp {
+            from { transform: translateY(100%); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .success-content {
+            max-width: 550px;
+            background: white;
+            padding: 3rem 2rem;
+            border-radius: 40px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.1);
+            position: relative;
+        }
+
+        .success-text {
+            font-size: 1.15rem;
+            line-height: 1.6;
+            color: #444;
+            margin-bottom: 1rem;
+        }
+
+        .highlight {
+            color: var(--heart-red);
+            font-weight: bold;
+        }
+
+        .pizzeria-msg {
+            background: #fff5f7;
+            padding: 20px;
+            border-radius: 20px;
+            border-left: 6px solid var(--primary-pink);
+            margin: 20px 0;
+            font-style: italic;
+            text-align: left;
+        }
+
+        .retry-text {
+            color: var(--heart-red);
+            font-size: 0.95rem;
+            margin-top: 15px;
+            display: none;
+            font-weight: 600;
+        }
+
+        /* Mobile */
+        @media (max-width: 480px) {
+            h1 { font-size: 2rem; }
+            .container { padding: 1.5rem; }
+            .btn { padding: 12px 30px; font-size: 1.1rem; }
+            .cat-container { width: 200px; height: 200px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="background-elements" id="background"></div>
+
+    <div class="container" id="main-card">
+        <div class="cat-container">
+            <!-- SVG Kotka Syjamskiego -->
+            <svg viewBox="0 0 200 200" class="cat-svg">
+                <!-- Ogon -->
+                <path d="M150,165 Q185,155 175,110" stroke="#555" stroke-width="12" fill="none" stroke-linecap="round" class="tail" />
+                
+                <!-- Uszy -->
+                <path d="M45,55 L55,15 L85,45 Z" fill="var(--cat-accent)" />
+                <path d="M155,55 L145,15 L115,45 Z" fill="var(--cat-accent)" />
+                
+                <!-- Głowa -->
+                <circle cx="100" cy="70" r="52" fill="var(--cat-gray)" />
+                
+                <!-- Maska syjamska -->
+                <path d="M68,78 Q100,115 132,78 Q100,55 68,78" fill="var(--cat-dark)" />
+                
+                <!-- Oczy -->
+                <circle cx="82" cy="78" r="8" fill="#4fc3f7" class="eye" />
+                <circle cx="118" cy="78" r="8" fill="#4fc3f7" class="eye" />
+                <circle cx="80" cy="76" r="3" fill="white" style="opacity:0.8" />
+                <circle cx="116" cy="76" r="3" fill="white" style="opacity:0.8" />
+                
+                <!-- Różowe policzki -->
+                <circle cx="70" cy="95" r="5" fill="#ffb7c5" opacity="0.6" />
+                <circle cx="130" cy="95" r="5" fill="#ffb7c5" opacity="0.6" />
+                
+                <!-- Nos i uśmiech -->
+                <path d="M97,90 L103,90 L100,95 Z" fill="#ff85a2" />
+                <path d="M92,100 Q100,108 108,100" stroke="var(--cat-accent)" stroke-width="2" fill="none" />
+                
+                <!-- Ciało -->
+                <path d="M60,130 Q100,100 140,130 L145,185 Q100,195 55,185 Z" fill="var(--cat-gray)" />
+                
+                <!-- Ciemne łapki (skarpetki) -->
+                <circle cx="78" cy="188" r="14" fill="var(--cat-dark)" />
+                <circle cx="122" cy="188" r="14" fill="var(--cat-dark)" />
+                
+                <!-- Serduszko w łapkach -->
+                <path d="M100,140 Q115,125 130,140 Q130,160 100,175 Q70,160 70,140 Q85,125 100,140" class="heart-pulse" />
+            </svg>
+        </div>
+
+        <h1>Czy zostaniesz moją Walentynką? ❤️🐱</h1>
+        
+        <div class="buttons-container">
+            <button class="btn" id="yes-btn" onclick="sayYes()">Tak ❤️</button>
+            <button class="btn" id="no-btn" onmouseover="moveNoButton()" onclick="moveNoButton()">Nie 🙈</button>
+        </div>
+        <p id="retry-msg" class="retry-text">Miau... chyba coś ci się kliknęło nie tak 😼 Spróbuj jeszcze raz!</p>
+    </div>
+
+    <!-- Panel Sukcesu -->
+    <div id="success-panel">
+        <div class="success-content">
+            <h2 style="font-family: 'Dancing Script'; color: var(--heart-red); font-size: 3rem; margin-bottom: 1rem;">Miau! 🐱💖</h2>
+            <div class="success-text">
+                <p>W takim razie przeznaczenie jest już zapisane... choć plan pozostaje wielką zagadką.</p>
+                
+                <div class="pizzeria-msg">
+                    Tym razem nie wybierzemy tego, co znane i bezpieczne. Pozwolimy, by to ślepy los wskazał nam drogę do naszych talerzy – przygotuj się na kulinarną przygodę, której finału żadne z nas nie zna... 😼🍕
+                </div>
+
+                <p>A gdy świat na zewnątrz ucichnie... czeka nas misja wymagająca precyzji i cierpliwości.</p>
+                <p style="margin-top: 15px; font-weight: 600;">
+                    W środku kolorowego świata i ulubionych przekąsek, krok po kroku, stworzymy coś wspólnego. Kocyk, film i nasz mały szary nadzorca dopilnują, by ta konstrukcja była pełna miłości 🧱✨🐾❤️
+                </p>
+            </div>
+            <div style="font-size: 3.5rem; margin-top: 1.5rem;">🐱🧱✨</div>
+        </div>
+    </div>
+
+    <script>
+        function createBackground() {
+            const bg = document.getElementById('background');
+            const icons = ['❤️', '💖', '🐾', '🐱', '☁️', '✨'];
+            
+            for (let i = 0; i < 30; i++) {
+                const item = document.createElement('div');
+                item.className = 'floating-item';
+                item.innerText = icons[Math.floor(Math.random() * icons.length)];
+                item.style.left = Math.random() * 100 + 'vw';
+                item.style.animationDuration = (Math.random() * 4 + 4) + 's';
+                item.style.animationDelay = (Math.random() * 5) + 's';
+                item.style.fontSize = (Math.random() * 20 + 15) + 'px';
+                bg.appendChild(item);
+            }
+        }
+
+        function moveNoButton() {
+            const btn = document.getElementById('no-btn');
+            const retryMsg = document.getElementById('retry-msg');
+            retryMsg.style.display = 'block';
+
+            const padding = 50;
+            const x = Math.random() * (window.innerWidth - btn.offsetWidth - padding * 2) - (window.innerWidth / 2 - btn.offsetWidth / 2 - padding);
+            const y = Math.random() * (window.innerHeight - btn.offsetHeight - padding * 2) - (window.innerHeight / 2 - btn.offsetHeight / 2 - padding);
+            
+            btn.style.transform = `translate(${x}px, ${y}px)`;
+            
+            const currentScale = parseFloat(btn.dataset.scale || 1);
+            if (currentScale > 0.4) {
+                const newScale = currentScale - 0.08;
+                btn.style.scale = newScale;
+                btn.dataset.scale = newScale;
+            }
+        }
+
+        function sayYes() {
+            const panel = document.getElementById('success-panel');
+            panel.style.display = 'flex';
+            for(let i=0; i<60; i++) {
+                setTimeout(createHeartDrop, i * 40);
+            }
+        }
+
+        function createHeartDrop() {
+            const heart = document.createElement('div');
+            const colors = ['❤️', '💖', '💕', '💗'];
+            heart.innerText = colors[Math.floor(Math.random() * colors.length)];
+            heart.style.position = 'fixed';
+            heart.style.left = Math.random() * 100 + 'vw';
+            heart.style.top = '-50px';
+            heart.style.zIndex = '1000';
+            heart.style.fontSize = Math.random() * 25 + 20 + 'px';
+            heart.style.transition = 'transform 2.5s linear, opacity 2.5s';
+            heart.style.pointerEvents = 'none';
+            document.body.appendChild(heart);
+            
+            setTimeout(() => {
+                heart.style.transform = `translateY(${window.innerHeight + 100}px) rotate(${Math.random() * 720 - 360}deg)`;
+                heart.style.opacity = '0';
+            }, 50);
+
+            setTimeout(() => heart.remove(), 3000);
+        }
+
+        window.onload = createBackground;
+    </script>
+</body>
+</html>
